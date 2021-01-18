@@ -62,17 +62,17 @@ jobs:
           path: rtables/docs
           destination: pkgdown
 
-  TODOs:
-    docker:
-      - image: cimg/base:2020.01
-    steps:
-      - checkout:
-          path: rtables
-      - run:
-          command: grep -R -A 2 "TODO" rtables/R > TODOs.txt
-      - store_artifacts:
-          path: TODOs.txt
-          destination: TODOs.txt
+  # TODOs:
+  #   docker:
+  #     - image: cimg/base:2020.01
+  #   steps:
+  #     - checkout:
+  #         path: rtables
+  #     - run:
+  #         command: grep -R -A 2 "TODO" rtables/R > TODOs.txt
+  #     - store_artifacts:
+  #         path: TODOs.txt
+  #         destination: TODOs.txt
 
 workflows:
   version: 2
@@ -85,4 +85,4 @@ workflows:
       - build_check_install:
           requires:
             - roxygen
-      - TODOs
+      # - TODOs
