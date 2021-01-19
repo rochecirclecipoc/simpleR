@@ -5,28 +5,28 @@ jobs:
       - image: rocker/tidyverse:3.6.3
     steps:
       - checkout:
-          path: rtables
+          path: ${CIRCLE_PROJECT_REPONAME}
       - run:
           name: "Build R package"
           command: |
             env
-            R CMD build rtables
+            R CMD build ${CIRCLE_PROJECT_REPONAME}
             echo "export PKG=$(echo *.tar.gz)" >> $BASH_ENV
       - run:
           name: "Check R package"
           command: |
             R CMD check --no-manual ${PKG}
-            result=$(tail -1 rtables.Rcheck/00check.log)
+            result=$(tail -1 ${CIRCLE_PROJECT_REPONAME}.Rcheck/00check.log)
             [[ $result = Status:* ]] || echo "could not get Status line"; set -o errexit
             [[ $result = *"Error"* ]] && echo "checks result in errors"; set -o errexit
       - run:
           name: "Install R package"
           command: R CMD INSTALL ${PKG}
       - store_artifacts:
-          path: rtables.Rcheck/00check.log
+          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/00check.log
           destination: 00check.log
       - store_test_results:
-          path: rtables.Rcheck/tests
+          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/tests
       - persist_to_workspace:
           root: ./
           paths:
@@ -55,25 +55,25 @@ jobs:
       - image: rocker/tidyverse:3.6.3
     steps:
       - checkout:
-          path: rtables
+          path: ${CIRCLE_PROJECT_REPONAME}
       - run:
           name: "create pkgdown website"
-          command: R -e 'pkgdown::build_site("rtables", devel = FALSE)'
+          command: R -e 'pkgdown::build_site("${CIRCLE_PROJECT_REPONAME}", devel = FALSE)'
       - store_artifacts:
-          path: rtables/docs
+          path: ${CIRCLE_PROJECT_REPONAME}/docs
           destination: pkgdown
 
-  # TODOs:
-  #   docker:
-  #     - image: cimg/base:2020.01
-  #   steps:
-  #     - checkout:
-  #         path: rtables
-  #     - run:
-  #         command: grep -R -A 2 "TODO" rtables/R > TODOs.txt
-  #     - store_artifacts:
-  #         path: TODOs.txt
-  #         destination: TODOs.txt
+  TODOs:
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout:
+          path: ${CIRCLE_PROJECT_REPONAME}
+      - run:
+          command: grep -R -A 2 "TODO" ${CIRCLE_PROJECT_REPONAME}/R > TODOs.txt
+      - store_artifacts:
+          path: TODOs.txt
+          destination: TODOs.txt
 
 workflows:
   version: 2
@@ -86,4 +86,4 @@ workflows:
       - build_check_install:
           requires:
             - roxygen
-      # - TODOs
+      - TODOs
