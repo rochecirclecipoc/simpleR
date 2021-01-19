@@ -4,7 +4,8 @@ jobs:
     docker:
       - image: rocker/tidyverse:3.6.3
     steps:
-      - checkout
+      - checkout:
+          path: ${CIRCLE_PROJECT_REPONAME}
       - run:
           name: "Build R package"
           command: |
@@ -67,17 +68,6 @@ jobs:
           path: ${CIRCLE_PROJECT_REPONAME}/docs
           destination: pkgdown
 
-  TODOs:
-    docker:
-      - image: cimg/base:2020.01
-    steps:
-      - checkout
-      - run:
-          command: grep -R -A 2 "TODO" ./R > TODOs.txt
-      - store_artifacts:
-          path: TODOs.txt
-          destination: TODOs.txt
-
 workflows:
   version: 2
   Rworkflow:
@@ -89,4 +79,3 @@ workflows:
       - build_check_install:
           requires:
             - roxygen
-      - TODOs
