@@ -5,7 +5,7 @@ jobs:
       - image: rocker/tidyverse:3.6.3
     steps:
       - checkout:
-          path: << pipeline.project.name >>
+          path: {{ $CIRCLE_PROJECT_REPONAME }}
       - run:
           name: "Build R package"
           command: |
