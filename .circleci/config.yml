@@ -5,10 +5,11 @@ jobs:
       - image: rocker/tidyverse:3.6.3
     steps:
       - checkout:
-          path: ${CIRCLE_PROJECT_REPONAME}
+          path: << environment.CIRCLE_PROJECT_REPONAME >>
       - run:
           name: "Build R package"
           command: |
+            echo "<< environment >>"
             pwd
             ls -al
             cd ..
