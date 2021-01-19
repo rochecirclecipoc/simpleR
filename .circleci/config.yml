@@ -8,7 +8,12 @@ jobs:
       - run:
           name: "Build R package"
           command: |
+            pwd
+            ls -al
             cd ..
+            echo "cd .."
+            pwd
+            ls -al
             R CMD build ${CIRCLE_PROJECT_REPONAME}
             echo "export PKG=$(echo *.tar.gz)" >> $BASH_ENV
       - run:
@@ -66,10 +71,9 @@ jobs:
     docker:
       - image: cimg/base:2020.01
     steps:
-      - checkout:
-          path: ${CIRCLE_PROJECT_REPONAME}
+      - checkout
       - run:
-          command: grep -R -A 2 "TODO" ${CIRCLE_PROJECT_REPONAME}/R > TODOs.txt
+          command: grep -R -A 2 "TODO" ./R > TODOs.txt
       - store_artifacts:
           path: TODOs.txt
           destination: TODOs.txt
