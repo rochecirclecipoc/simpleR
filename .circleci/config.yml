@@ -9,6 +9,7 @@ jobs:
       - run:
           name: "Build R package"
           command: |
+            env
             R CMD build rtables
             echo "export PKG=$(echo *.tar.gz)" >> $BASH_ENV
       - run:
