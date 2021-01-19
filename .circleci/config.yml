@@ -4,12 +4,11 @@ jobs:
     docker:
       - image: rocker/tidyverse:3.6.3
     steps:
-      - checkout:
-          path: ${CIRCLE_PROJECT_REPONAME}
+      - checkout
       - run:
           name: "Build R package"
           command: |
-            env
+            cd ..
             R CMD build ${CIRCLE_PROJECT_REPONAME}
             echo "export PKG=$(echo *.tar.gz)" >> $BASH_ENV
       - run:
