@@ -21,10 +21,10 @@ jobs:
           name: "Install R package"
           command: R CMD INSTALL ${PKG}
       - store_artifacts:
-          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/00check.log
+          path: {{ .Environment.CIRCLE_PROJECT_REPONAME }}.Rcheck/00check.log
           destination: 00check.log
       - store_test_results:
-          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/tests
+          path: {{ .Environment.CIRCLE_PROJECT_REPONAME }}.Rcheck/tests
       - persist_to_workspace:
           root: ./
           paths:
