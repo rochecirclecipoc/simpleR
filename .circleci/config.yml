@@ -20,11 +20,14 @@ jobs:
       - run:
           name: "Install R package"
           command: R CMD INSTALL ${PKG}
+      - run:
+          name: "Prepare artifacts"
+          command: mv ${CIRCLE_PROJECT_REPONAME}.Rcheck rpackage.Rcheck
       - store_artifacts:
-          path: "{{ .Environment.CIRCLE_PROJECT_REPONAME }}.Rcheck/00check.log"
+          path: "rpackage.Rcheck/00check.log"
           destination: 00check.log
       - store_test_results:
-          path: "{{ .Environment.CIRCLE_PROJECT_REPONAME }}.Rcheck/tests"
+          path: "rpackage.Rcheck/tests"
       - persist_to_workspace:
           root: ./
           paths:
