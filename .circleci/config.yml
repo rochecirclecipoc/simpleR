@@ -4,18 +4,11 @@ jobs:
     docker:
       - image: rocker/tidyverse:3.6.3
     steps:
-      - checkout:
-          path: {{ $CIRCLE_PROJECT_REPONAME }}
+      - checkout
       - run:
           name: "Build R package"
           command: |
-            pwd
-            ls -al
-            cd ..
-            echo "cd .."
-            pwd
-            ls -al
-            R CMD build ${CIRCLE_PROJECT_REPONAME}
+            R CMD build .
             echo "export PKG=$(echo *.tar.gz)" >> $BASH_ENV
       - run:
           name: "Check R package"
@@ -27,11 +20,14 @@ jobs:
       - run:
           name: "Install R package"
           command: R CMD INSTALL ${PKG}
+      - run:
+          name: "Prepare artifacts"
+          command: mv ${CIRCLE_PROJECT_REPONAME}.Rcheck rpackage.Rcheck
       - store_artifacts:
-          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/00check.log
+          path: "rpackage.Rcheck/00check.log"
           destination: 00check.log
       - store_test_results:
-          path: ${CIRCLE_PROJECT_REPONAME}.Rcheck/tests
+          path: "rpackage.Rcheck/tests"
       - persist_to_workspace:
           root: ./
           paths:
@@ -59,13 +55,12 @@ jobs:
     docker:
       - image: rocker/tidyverse:3.6.3
     steps:
-      - checkout:
-          path: ${CIRCLE_PROJECT_REPONAME}
+      - checkout
       - run:
           name: "create pkgdown website"
-          command: R -e 'pkgdown::build_site("${CIRCLE_PROJECT_REPONAME}", devel = FALSE)'
+          command: R -e 'pkgdown::build_site(".", devel = FALSE)'
       - store_artifacts:
-          path: ${CIRCLE_PROJECT_REPONAME}/docs
+          path: ./docs
           destination: pkgdown
 
 workflows:
