@@ -16,7 +16,7 @@ echo "result_line = $result_line"
 
 if [ -n "$result_line" ]; then
     apt-get update
-    apt-get install --no-install-recommends -y "$result_line"
+    apt-get install --no-install-recommends -y --verbose-versions $result_line
     apt-get clean
     wget --version
     curl --version
