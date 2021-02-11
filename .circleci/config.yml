@@ -98,6 +98,15 @@ jobs:
           path: ./docs
           destination: pkgdown
 
+  pre-install:
+    executor: test-node
+    steps:
+      - checkout
+      - run:
+          <<: *defaults-pre-system
+      - run:
+          <<: *defaults-pre-pkg
+
 workflows:
   version: 2.1
   Rworkflow:
@@ -110,6 +119,9 @@ workflows:
             - run:
                <<: *defaults-pre-pkg
       - pkgdown:
+          pre-steps:
+            - run:
+                pre-install
           requires:
             - roxygen
       - build_check_install:
