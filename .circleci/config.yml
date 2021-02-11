@@ -1,12 +1,12 @@
 version: 2.1
 executors:
-  my-executor:
+  test-node:
     docker:
       - image: rocker/tidyverse:3.6.3
 
 jobs:
   build_check_install:
-    executor: my-executor
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -38,7 +38,7 @@ jobs:
             - "*.tar.gz"
 
   roxygen:
-    executor: my-executor
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -55,7 +55,7 @@ jobs:
             fi
 
   pkgdown:
-    executor: my-executor
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -66,7 +66,7 @@ jobs:
           destination: pkgdown
 
   install_system_packages:
-    executor: my-executor
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -75,16 +75,16 @@ jobs:
             apt-get update
             apt-get install --no-install-recommends -y wget curl
             apt-get clean
+            wget --version
+            curl --version
 
   install_R_packages:
-    executor: my-executor
+    executor: test-node
     steps:
       - checkout
       - run:
           name: "install R packages from CRAN"
           command: |
-            wget --version
-            curl --version
             R --vanilla \<<- 'EOF'
             options(repos = c(CRAN = "https://cloud.r-project.org"))
             .libPaths()
@@ -92,6 +92,19 @@ jobs:
                 c("testthat", "yaml")
               )
             EOF
+            echo "information about R-packages"
+            R --vanilla \<<- 'EOF'
+            installed.packages() -> d1
+            d1[rownames(d1) == 'testthat', c("Version", "LibPath")]
+            print('testthat')
+            print(d1)
+            d1[rownames(d1) == 'yaml', c("Version", "LibPath")]
+            print('yaml')
+            print(d1)
+            EOF
+            echo 'verify previous step'
+            wget --version
+            curl --version
 
 
 workflows:
