@@ -28,7 +28,7 @@ if [ -f "$file" ]; then
         do
             echo "details about package: $line"
             Rscript --vanilla -e 'installed.packages() -> d1' \
-                -e "print(d1[rownames(d1) == \'$line\', c(\"Version\", \"LibPath\")])"
+                -e "print(d1[rownames(d1) == '$line', c('Version', 'LibPath')])"
         done < "$file"
     fi
 else
