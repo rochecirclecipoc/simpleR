@@ -2,12 +2,15 @@
 version: 2.1
 defaults-pre-system: &defaults-pre-system
   name: "install system dependencies"
-  command: ./.circelci/install_system_deps.sh
+  command: |
+    pwd
+    ls -alR
+    ./.circleci/install_system_deps.sh
 
 
 defaults-pre-pkg: &defaults-pre-pkg
   name: "install R packages from CRAN"
-  command: ./.circelci/install_R_pkgs.sh
+  command: ./.circleci/install_R_pkgs.sh
 
 defaults-pre: &defaults-pre
   - checkout
