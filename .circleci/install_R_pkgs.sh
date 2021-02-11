@@ -1,4 +1,5 @@
-#!/bin/bash -eo pipefail
+#!/bin/bash 
+set -eo pipefail
 R --vanilla \<<- 'EOF'
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 .libPaths()
