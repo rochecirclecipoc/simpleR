@@ -32,6 +32,13 @@ defaults-pre-pkg: &defaults-pre-pkg
     wget --version
     curl --version
 
+defaults: &defaults
+  - checkout
+  - run:
+      <<: *defaults-pre-system
+  - run:
+      <<: *defaults-pre-pkg
+
 executors:
   test-node:
     docker:
@@ -120,8 +127,7 @@ workflows:
                <<: *defaults-pre-pkg
       - pkgdown:
           pre-steps:
-            - run:
-                pre-install
+            *defaults
           requires:
             - roxygen
       - build_check_install:
