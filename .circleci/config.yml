@@ -63,11 +63,26 @@ jobs:
           path: ./docs
           destination: pkgdown
 
+  install_system_packages:
+    docker:
+      - image: rocker/tidyverse:3.6.3
+    steps:
+      - checkout
+      - run:
+          name: "install system packages"
+          command: |
+            apt update
+            apt install wget curl
+
+
 workflows:
   version: 2
   Rworkflow:
     jobs:
-      - roxygen
+      - install_system_packages
+      - roxygen:
+          requires:
+            - install_system_packages
       - pkgdown:
           requires:
             - roxygen
