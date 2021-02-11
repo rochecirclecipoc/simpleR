@@ -83,14 +83,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "install system packages"
-          command: |
-            apt-get update
-            apt-get install --no-install-recommends -y wget curl
-            apt-get clean
-            wget --version
-            curl --version
-      - run:
           name: "install R packages from CRAN"
           command: |
             R --vanilla \<<- 'EOF'
@@ -120,7 +112,14 @@ workflows:
 #      - install_system_packages
       - install_R_packages:
           pre-steps:
-            - install_system_packages
+            - run:
+                name: "install system packages"
+                command: |
+                  apt-get update
+                  apt-get install --no-install-recommends -y wget curl
+                  apt-get clean
+                  wget --version
+                  curl --version
       - roxygen:
           requires:
             - install_R_packages
