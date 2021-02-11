@@ -1,3 +1,5 @@
+
+version: 2.1
 defaults-pre-system: &defaults-pre-system
   - run:
       name: "install system packages"
@@ -31,7 +33,6 @@ defaults-pre-pkg: &defaults-pre-pkg
         wget --version
         curl --version
 
-version: 2.1
 executors:
   test-node:
     docker:
