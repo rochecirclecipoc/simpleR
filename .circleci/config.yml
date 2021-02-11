@@ -1,3 +1,36 @@
+defaults-pre-system: &defaults-pre-system
+  - run:
+    name: "install system packages"
+    command: |
+      apt-get update
+      apt-get install --no-install-recommends -y wget curl
+      apt-get clean
+      wget --version
+      curl --version
+
+defaults-pre-pkg: &defaults-pre-pkg
+  - run:
+      name: "install R packages from CRAN"
+      command: |
+        R --vanilla \<<- 'EOF'
+        options(repos = c(CRAN = "https://cloud.r-project.org"))
+        .libPaths()
+        install.packages(
+            c("testthat", "yaml")
+          )
+        EOF
+        echo "information about R-packages"
+        R --vanilla \<<- 'EOF'
+        installed.packages() -> d1
+        print('testthat')
+        print(d1[rownames(d1) == 'testthat', c("Version", "LibPath")])
+        print('yaml')
+        print(d1[rownames(d1) == 'yaml', c("Version", "LibPath")])
+        EOF
+        echo 'verify system installation step'
+        wget --version
+        curl --version
+
 version: 2.1
 executors:
   test-node:
@@ -66,40 +99,14 @@ jobs:
           destination: pkgdown
 
 workflows:
-  version: 2
+  version: 2.1
   Rworkflow:
     jobs: 
       - roxygen:
           pre-steps:
-            - run:
-                name: "install system packages"
-                command: |
-                  apt-get update
-                  apt-get install --no-install-recommends -y wget curl
-                  apt-get clean
-                  wget --version
-                  curl --version
-            - run:
-                name: "install R packages from CRAN"
-                command: |
-                  R --vanilla \<<- 'EOF'
-                  options(repos = c(CRAN = "https://cloud.r-project.org"))
-                  .libPaths()
-                  install.packages(
-                      c("testthat", "yaml")
-                    )
-                  EOF
-                  echo "information about R-packages"
-                  R --vanilla \<<- 'EOF'
-                  installed.packages() -> d1
-                  print('testthat')
-                  print(d1[rownames(d1) == 'testthat', c("Version", "LibPath")])
-                  print('yaml')
-                  print(d1[rownames(d1) == 'yaml', c("Version", "LibPath")])
-                  EOF
-                  echo 'verify system installation step'
-                  wget --version
-                  curl --version
+            - steps:
+              <<: *defaults-pre-system
+              <<: *defaults-pre-pkg
       - pkgdown:
           requires:
             - roxygen
