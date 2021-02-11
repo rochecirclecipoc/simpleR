@@ -71,9 +71,9 @@ jobs:
       - run:
           name: "install system packages"
           command: |
-            apt update
-            apt install wget curl
-
+            apt-get update
+            apt-get install --no-install-recommends -y wget curl
+            apt-get clean
 
 workflows:
   version: 2
