@@ -1,12 +1,12 @@
 defaults-pre-system: &defaults-pre-system
   - run:
-    name: "install system packages"
-    command: |
-      apt-get update
-      apt-get install --no-install-recommends -y wget curl
-      apt-get clean
-      wget --version
-      curl --version
+      name: "install system packages"
+      command: |
+        apt-get update
+        apt-get install --no-install-recommends -y wget curl
+        apt-get clean
+        wget --version
+        curl --version
 
 defaults-pre-pkg: &defaults-pre-pkg
   - run:
@@ -104,8 +104,8 @@ workflows:
     jobs: 
       - roxygen:
           pre-steps:
-              <<: *defaults-pre-system
-              <<: *defaults-pre-pkg
+            <<: *defaults-pre-system
+            <<: *defaults-pre-pkg
       - pkgdown:
           requires:
             - roxygen
