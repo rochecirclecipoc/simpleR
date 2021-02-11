@@ -2,10 +2,7 @@
 version: 2.1
 defaults-pre-system: &defaults-pre-system
   name: "install system dependencies"
-  command: |
-    pwd
-    ls -alR
-    ./.circleci/install_system_deps.sh
+  command: ./.circleci/install_system_deps.sh
 
 
 defaults-pre-pkg: &defaults-pre-pkg
