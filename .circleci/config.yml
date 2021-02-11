@@ -117,9 +117,9 @@ workflows:
   version: 2
   Rworkflow:
     jobs:
-      - install_system_packages
+#      - install_system_packages
       - install_R_packages:
-          requires:
+          pre-steps:
             - install_system_packages
       - roxygen:
           requires:
