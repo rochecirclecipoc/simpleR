@@ -13,13 +13,9 @@ do
 done < "$file"
 
 if [ -n "$result_line" ]; then
-R --vanilla <<- 'EOF'
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-.libPaths()
-install.packages(
-    c("$result_line")
-    )
-EOF
+Rscript --vanilla -e 'options(repos = c(CRAN = "https://cloud.r-project.org"))' \
+    -e '.libPaths()' \
+    -e "install.packages(c($result_line))"
 
 echo "information about R-packages"
 R --vanilla <<- 'EOF'
@@ -30,6 +26,5 @@ print('yaml')
 print(d1[rownames(d1) == 'yaml', c("Version", "LibPath")])
 EOF
 echo 'verify system installation step'
-wget --version
-curl --version
+
 fi
