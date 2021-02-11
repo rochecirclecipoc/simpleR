@@ -1,8 +1,12 @@
 version: 2.1
-jobs:
-  build_check_install:
+executors:
+  my-executor:
     docker:
       - image: rocker/tidyverse:3.6.3
+
+jobs:
+  build_check_install:
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -34,8 +38,7 @@ jobs:
             - "*.tar.gz"
 
   roxygen:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -52,8 +55,7 @@ jobs:
             fi
 
   pkgdown:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -64,8 +66,7 @@ jobs:
           destination: pkgdown
 
   install_system_packages:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -76,8 +77,7 @@ jobs:
             apt-get clean
 
   install_R_packages:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: my-executor
     steps:
       - checkout
       - run:
@@ -92,6 +92,7 @@ jobs:
                 c("testthat", "yaml")
               )
             EOF
+
 
 workflows:
   version: 2
