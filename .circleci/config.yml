@@ -104,7 +104,6 @@ workflows:
     jobs: 
       - roxygen:
           pre-steps:
-            - steps:
               <<: *defaults-pre-system
               <<: *defaults-pre-pkg
       - pkgdown:
