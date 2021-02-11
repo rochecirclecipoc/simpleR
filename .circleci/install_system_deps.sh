@@ -4,14 +4,13 @@ set -eo pipefail
 
 result_line=""
 
-pwd
-ls -al
+file="./.circleci/system-deps.txt"
 
 while read -r line
 do
     echo "line = $line"
     result_line="$result_line $line"
-done < "system-deps.txt"
+done < "$file"
 
 echo "result_line = $result_line"
 
@@ -22,4 +21,3 @@ if [ -n "$result_line" ]; then
     wget --version
     curl --version
 fi
-

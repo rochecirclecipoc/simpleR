@@ -1,6 +1,7 @@
 #!/bin/bash 
 set -eo pipefail
 result_line=""
+file="./.circleci/r-pkg-deps.txt"
 
 while read -r line
 do
@@ -9,7 +10,7 @@ do
         result_line="$result_line, "
     fi
     result_line="$result_line \"$line\""
-done < "r-pkg-deps.txt"
+done < "$file"
 
 if [ -n "$result_line" ]; then
 R --vanilla <<- 'EOF'
