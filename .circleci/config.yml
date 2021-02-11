@@ -83,7 +83,7 @@ jobs:
       - run:
           name: "install R packages from CRAN"
           command: |
-            R --vanilla \\<<- 'EOF'
+            R --vanilla \<<- 'EOF'
             options(repos = c(CRAN = "https://cloud.r-project.org"))
             .libPaths()
             install.packages(
