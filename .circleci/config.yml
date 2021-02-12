@@ -1,8 +1,29 @@
+
 version: 2.1
-jobs:
-  build_check_install:
+defaults-pre-system: &defaults-pre-system
+  name: "install system dependencies"
+  command: ./.circleci/install_system_deps.sh
+
+
+defaults-pre-pkg: &defaults-pre-pkg
+  name: "install R packages from CRAN"
+  command: ./.circleci/install_R_pkgs.sh
+
+defaults-pre: &defaults-pre
+  - checkout
+  - run:
+      <<: *defaults-pre-system
+  - run:
+      <<: *defaults-pre-pkg
+
+executors:
+  test-node:
     docker:
       - image: rocker/tidyverse:3.6.3
+
+jobs:
+  build_check_install:
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -34,8 +55,7 @@ jobs:
             - "*.tar.gz"
 
   roxygen:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -52,8 +72,7 @@ jobs:
             fi
 
   pkgdown:
-    docker:
-      - image: rocker/tidyverse:3.6.3
+    executor: test-node
     steps:
       - checkout
       - run:
@@ -64,13 +83,19 @@ jobs:
           destination: pkgdown
 
 workflows:
-  version: 2
+  version: 2.1
   Rworkflow:
-    jobs:
-      - roxygen
+    jobs: 
+      - roxygen:
+          pre-steps:
+            *defaults-pre
       - pkgdown:
+          pre-steps:
+            *defaults-pre
           requires:
             - roxygen
       - build_check_install:
+          pre-steps:
+            *defaults-pre
           requires:
             - roxygen
